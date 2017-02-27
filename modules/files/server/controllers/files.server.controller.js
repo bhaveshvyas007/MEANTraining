@@ -8,7 +8,8 @@ var path = require('path'),
   File = mongoose.model('File'),
   errorHandler = require(path.resolve('./modules/core/server/controllers/errors.server.controller')),
   multer = require('multer'),
-  config = require(path.resolve('./config/config'));
+  config = require(path.resolve('./config/config')),
+  fs = require('fs');
 /**
  * Create a File
  */
@@ -65,6 +66,8 @@ exports.read = function (req, res) {
 exports.update = function (req, res) {
   var user = req.user;
   var file = req.file;
+  var oldFile = req.file.filepath;
+  console.log("Req:", req.file.filepath);
 
   var upload = multer(config.uploads.fileUpload).single('uploadFile');
   console.log('add file function');
@@ -78,21 +81,23 @@ exports.update = function (req, res) {
       } else {
         // var file = new File();
         file.user = req.user;
-        console.log('req.file.filename: ',req.file.filename);
         if (req.file.filename.indexOf('modules') > -1) {
           file.filename = req.file.filename;
         }
         else {
           file.filename = config.uploads.fileUpload.dest + req.file.filename;
         }
+        file.filepath = config.uploads.fileUpload.dest + req.file.filename;
         file.title = req.body.title || 'Auto Title';
         file.content = req.body.content || 'Auto Content';
+        console.log('File:',file);
         file.save(function (err) {
           if (err) {
             return res.status(400).send({
               message: errorHandler.getErrorMessage(err)
             });
           } else {
+            fs.unlinkSync(oldFile);
             res.json(file);
           }
         });
