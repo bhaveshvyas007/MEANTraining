@@ -21,18 +21,20 @@ angular.module('files').controller('FilesController', ['$scope', '$stateParams',
       fd.append('content', $scope.content);
 
       $http.post('api/files', fd, {
-          transformRequest: angular.identity,
-          headers: {'Content-Type': undefined}
-       })
+        transformRequest: angular.identity,
+        headers: {
+          'Content-Type': undefined
+        }
+      })
 
-       .success(function(response){
-         $scope.success = true;
+      .success(function(response){
+        $scope.success = true;
 
-         $location.path('files/' + response._id);
-       })
+        $location.path('files/' + response._id);
+      })
 
-       .error(function(){
-       });
+      .error(function(){
+      });
     };
 
     // Remove existing file
@@ -86,16 +88,16 @@ angular.module('files').controller('FilesController', ['$scope', '$stateParams',
 ])
 .directive('fileModel', ['$parse', function ($parse) {
   return {
-     restrict: 'A',
-     link: function(scope, element, attrs) {
-        var model = $parse(attrs.fileModel);
-        var modelSetter = model.assign;
+    restrict: 'A',
+    link: function(scope, element, attrs) {
+      var model = $parse(attrs.fileModel);
+      var modelSetter = model.assign;
 
-        element.bind('change', function(){
-           scope.$apply(function(){
-              modelSetter(scope, element[0].files[0]);
-           });
+      element.bind('change', function(){
+        scope.$apply(function(){
+          modelSetter(scope, element[0].files[0]);
         });
-     }
+      });
+    }
   };
-         }]);
+}]);

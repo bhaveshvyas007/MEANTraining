@@ -25,30 +25,30 @@ exports.create = function (req, res) {
         });
       } else {
 
-       var file = new File();
-       file.user = req.user;
-       file.filepath = config.uploads.fileUpload.dest + req.file.filename;
-       file.filename = req.file.originalname;
-       file.filetype = req.file.mimetype;
-       file.title = req.body.title || 'Auto Title';
-       file.content = req.body.content || 'Auto Content';
+        var file = new File();
+        file.user = req.user;
+        file.filepath = config.uploads.fileUpload.dest + req.file.filename;
+        file.filename = req.file.originalname;
+        file.filetype = req.file.mimetype;
+        file.title = req.body.title || 'Auto Title';
+        file.content = req.body.content || 'Auto Content';
 
-       file.save(function (err) {
-         if (err) {
-           return res.status(400).send({
-             message: errorHandler.getErrorMessage(err)
-           });
-         } else {
-           res.json(file);
-         }
-       });
-     }
-   });
+        file.save(function (err) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            res.json(file);
+          }
+        });
+      }
+    });
   } else {
-   console.log('else user');
-   res.status(400).send({
-     message: 'User is not signed in'
-   });
+    console.log('else user');
+    res.status(400).send({
+      message: 'User is not signed in'
+    });
   }
 };
 
@@ -101,7 +101,9 @@ exports.delete = function (req, res) {
  */
 exports.list = function (req, res) {
   console.log(req.user);
-  File.find({user :req.user._id}).sort('-created').populate('user', 'displayName').exec(function (err, files) {
+  File.find({
+    user :req.user._id
+  }).sort('-created').populate('user', 'displayName').exec(function (err, files) {
     if (err) {
       return res.status(400).send({
         message: errorHandler.getErrorMessage(err)
