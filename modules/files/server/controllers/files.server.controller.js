@@ -63,20 +63,47 @@ exports.read = function (req, res) {
  * Update a file
  */
 exports.update = function (req, res) {
+  var user = req.user;
   var file = req.file;
 
-  file.title = req.body.title;
-  file.content = req.body.content;
-
-  file.save(function (err) {
-    if (err) {
-      return res.status(400).send({
-        message: errorHandler.getErrorMessage(err)
-      });
-    } else {
-      res.json(file);
-    }
-  });
+  var upload = multer(config.uploads.fileUpload).single('uploadFile');
+  console.log('add file function');
+  if (user) {
+    console.log('if user');
+    upload(req, res, function (uploadError) {
+      if(uploadError) {
+        return res.status(400).send({
+          message: 'Error occurred while uploading File'
+        });
+      } else {
+        // var file = new File();
+        file.user = req.user;
+        console.log('req.file.filename: ',req.file.filename);
+        if (req.file.filename.indexOf('modules') > -1) {
+          file.filename = req.file.filename;
+        }
+        else {
+          file.filename = config.uploads.fileUpload.dest + req.file.filename;
+        }
+        file.title = req.body.title || 'Auto Title';
+        file.content = req.body.content || 'Auto Content';
+        file.save(function (err) {
+          if (err) {
+            return res.status(400).send({
+              message: errorHandler.getErrorMessage(err)
+            });
+          } else {
+            res.json(file);
+          }
+        });
+      }
+    });
+  } else {
+    console.log('else user');
+    res.status(400).send({
+      message: 'User is not signed in'
+    });
+  }
 };
 
 /**
