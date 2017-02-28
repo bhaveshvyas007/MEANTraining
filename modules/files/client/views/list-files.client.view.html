@@ -2,24 +2,34 @@
   <div class="page-header">
     <h1>Files</h1>
   </div>
-  <div class="container">
-    <button type="button" class="btn btn-primary" ng-click="type=undefined">All</button>
-    <button type="button" class="btn btn-primary" ng-click="type='image/*'">Image</button>
-    <button type="button" class="btn btn-primary" ng-click="type='video/*'">Video</button>
-    <button type="button" class="btn btn-primary" ng-click="type='text/pdf'">PDF</button>
-    <button type="button" class="btn btn-primary" ng-click="type='text/plain'">Text</button>
+  <div>
+    <ul class="nav nav-tabs">
+      <li><a href="#" ng-click="type=undefined">All</a></li>
+      <li><a href="#" ng-click="type='image/*'">Image</a></li>
+      <li><a href="#" ng-click="type='video/*'">Video</a></li>
+      <li><a href="#" ng-click="type='application/pdf'">PDF</a></li>
+      <li><a href="#" ng-click="type='text/plain'">Text</a></li>
+    </ul>
   </div>
   <div class="clear"></div>
-  <div class="list-group">
-    <a ng-repeat="file in files" ui-sref="files.view({fileId: file._id})" ng-if="fileFilter(file,type)" class="list-group-item">
-      <small class="list-group-item-text">
-        Posted on
-        <span ng-bind="file.created | date:'mediumDate'"></span>
-        by
-        <span ng-bind="file.user.displayName"></span>
-      </small>
-      <h4 class="list-group-item-heading">{{file.title}}( {{file.filename}} )</h4>
-      <p class="list-group-item-text" ng-bind="file.content"></p>
+  <div class="list-group" style="margin-top:10px">
+    <a class = "row" ng-repeat="file in files" ui-sref="files.view({fileId: file._id})" ng-if="fileFilter(file,type)" class="list-group-item">
+        <div class="col-md-1">
+          <img src="api/get-file/{{file._id}}" class="img-thumbnail" ng-if="file.filetype.substr(0, file.filetype.indexOf('/')) === 'image'">
+          <img src="modules/core/client/img/icon_video.png" class="img-thumbnail" ng-if="file.filetype.substr(0, file.filetype.indexOf('/')) === 'video'">
+          <img src="modules/core/client/img/icon_doc.png" class="img-thumbnail" ng-if="file.filetype=='text/plain'">
+          <img src="modules/core/client/img/icon_pdf.png" class="img-thumbnail" ng-if="file.filetype=='application/pdf'">
+        </div>
+        <div class="col-md-11">
+          <small class="list-group-item-text">
+          Posted on
+          <span ng-bind="file.created | date:'mediumDate'"></span>
+          by
+          <span ng-bind="file.user.displayName"></span>
+          </small>
+          <h4 class="list-group-item-heading">{{file.title}}</h4>
+          <p class="list-group-item-text" ng-bind="file.content"></p>
+        </div>
     </a>
   </div>
   <div class="alert alert-warning text-center" ng-if="files.$resolved && !files.length">
