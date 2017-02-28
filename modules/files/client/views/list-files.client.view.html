@@ -2,8 +2,16 @@
   <div class="page-header">
     <h1>Files</h1>
   </div>
+  <div class="container">
+    <button type="button" class="btn btn-primary" ng-click="type=undefined">All</button>
+    <button type="button" class="btn btn-primary" ng-click="type='image/*'">Image</button>
+    <button type="button" class="btn btn-primary" ng-click="type='video/*'">Video</button>
+    <button type="button" class="btn btn-primary" ng-click="type='text/pdf'">PDF</button>
+    <button type="button" class="btn btn-primary" ng-click="type='text/plain'">Text</button>
+  </div>
+  <div class="clear"></div>
   <div class="list-group">
-    <a ng-repeat="file in files" ui-sref="files.view({fileId: file._id})" class="list-group-item">
+    <a ng-repeat="file in files" ui-sref="files.view({fileId: file._id})" ng-if="fileFilter(file,type)" class="list-group-item">
       <small class="list-group-item-text">
         Posted on
         <span ng-bind="file.created | date:'mediumDate'"></span>

@@ -39,7 +39,7 @@ module.exports = {
     fileUpload: {
       dest: './modules/files/client/storage/uploads/', // File upload destination path
       limits: {
-        fileSize: 1*1024*1024 // Max file size in bytes (1 MB)
+        fileSize: 15*1024*1024 // Max file size in bytes (15 MB)
       }
     }
   }
