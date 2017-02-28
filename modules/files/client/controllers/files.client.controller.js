@@ -79,10 +79,10 @@ angular.module('files').controller('FilesController', ['$scope', '$stateParams',
 
     $scope.fileFilter = function(file,type){
       if(!type)return true;
-      if(type.slice(-1) == '*')
+      if(type.slice(-1) === '*')
         return file.filetype.substr(0, file.filetype.indexOf('/')) === type.substr(0, type.indexOf('/'));
       else
-        return file.filetype == type
+        return file.filetype === type;
     }; 
 
     // Find existing file
