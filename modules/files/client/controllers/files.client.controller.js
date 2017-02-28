@@ -1,12 +1,12 @@
 'use strict';
 
 // files controller
-angular.module('files').controller('FilesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Files','FileUploader', '$timeout', '$window','$http',
-  function ($scope, $stateParams, $location, Authentication, Files, FileUploader, $timeout, $window, $http) {
+angular.module('files').controller('FilesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Files', 'FileUploader', '$timeout', '$window', '$http',
+  function($scope, $stateParams, $location, Authentication, Files, FileUploader, $timeout, $window, $http) {
     $scope.authentication = Authentication;
 
     // Create new File
-    $scope.create = function (isValid) {
+    $scope.create = function(isValid) {
       //$scope.uploadFile();
       $scope.error = null;
 
@@ -27,18 +27,17 @@ angular.module('files').controller('FilesController', ['$scope', '$stateParams',
         }
       })
 
-      .success(function(response){
-        $scope.success = true;
+        .success(function(response) {
+          $scope.success = true;
 
-        $location.path('files/' + response._id);
-      })
+          $location.path('files/' + response._id);
+        })
 
-      .error(function(){
-      });
+        .error(function() {});
     };
 
     // Remove existing file
-    $scope.remove = function (file) {
+    $scope.remove = function(file) {
       if (file) {
         file.$remove();
 
@@ -48,14 +47,14 @@ angular.module('files').controller('FilesController', ['$scope', '$stateParams',
           }
         }
       } else {
-        $scope.file.$remove(function () {
+        $scope.file.$remove(function() {
           $location.path('files');
         });
       }
     };
 
     // Update existing file
-    $scope.update = function (isValid) {
+    $scope.update = function(isValid) {
       $scope.error = null;
 
       if (!isValid) {
@@ -64,56 +63,52 @@ angular.module('files').controller('FilesController', ['$scope', '$stateParams',
         return false;
       }
 
-      var fd = new FormData();
-      fd.append('uploadFile',$scope.newFile);
-      fd.append('title', $scope.file.title);
-      fd.append('content', $scope.file.content);
+      var file = $scope.file;
 
-      var file = $scope.file.file;
-
-      $http.put('api/files/'+$stateParams.fileId, fd, {
-        transformRequest: angular.identity,
-        headers: {
-          'Content-Type': undefined
-        }
-      }).success(function(response){
-        $scope.success = true;
-
-        $location.path('files/' + response._id);
+      file.$update(function() {
+        $location.path('files/' + file._id);
+      }, function(errorResponse) {
+        $scope.error = errorResponse.data.message;
       });
-
-      // file.$update(function () {
-      //   $location.path('files/' + file._id);
-      // }, function (errorResponse) {
-      //   $scope.error = errorResponse.data.message;
-      // });
     };
 
     // Find a list of files
-    $scope.find = function () {
+    $scope.find = function() {
       $scope.files = Files.query();
     };
 
+    $scope.fileFilter = function(file,type){
+      if(!type)return true;
+      if(type.slice(-1) == '*')
+        return file.filetype.substr(0, file.filetype.indexOf('/')) === type.substr(0, type.indexOf('/'));
+      else
+        return file.filetype == type
+    }; 
+
     // Find existing file
-    $scope.findOne = function () {
+    $scope.findOne = function() {
       $scope.file = Files.get({
         fileId: $stateParams.fileId
       });
     };
+    $scope.showImage = function(){
+      console.log("Show Image");
+      $scope.files = Files.query();
+    };
   }
 ])
-.directive('fileModel', ['$parse', function ($parse) {
-  return {
-    restrict: 'A',
-    link: function(scope, element, attrs) {
-      var model = $parse(attrs.fileModel);
-      var modelSetter = model.assign;
+  .directive('fileModel', ['$parse', function($parse) {
+    return {
+      restrict: 'A',
+      link: function(scope, element, attrs) {
+        var model = $parse(attrs.fileModel);
+        var modelSetter = model.assign;
 
-      element.bind('change', function(){
-        scope.$apply(function(){
-          modelSetter(scope, element[0].files[0]);
+        element.bind('change', function() {
+          scope.$apply(function() {
+            modelSetter(scope, element[0].files[0]);
+          });
         });
-      });
-    }
-  };
-}]);
+      }
+    };
+  }]);
