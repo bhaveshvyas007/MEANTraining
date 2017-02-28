@@ -93,7 +93,8 @@ angular.module('files').controller('FilesController', ['$scope', '$stateParams',
         return file.filetype.substr(0, file.filetype.indexOf('/')) === type.substr(0, type.indexOf('/'));
       else
         return file.filetype === type;
-    };
+
+    }; 
 
     // Find existing file
     $scope.findOne = function() {
