@@ -8,7 +8,10 @@ var filesPolicy = require('../policies/files.server.policy'),
 
 module.exports = function (app) {
   // Files collection routes
-  
+
+  app.route('/api/get-file/:fileId').all(filesPolicy.isAllowed)
+    .get(files.getFile);
+
   app.route('/api/files').all(filesPolicy.isAllowed)
     .get(files.list)
     .post(files.create);

@@ -37,6 +37,16 @@ angular.module('files').controller('FilesController', ['$scope', '$stateParams',
       });
     };
 
+    $scope.download = function () {
+      $http.get('api/get-file/'+$stateParams.fileId)
+
+      .success(function(response){
+        console.log(response);
+      })
+
+      .error(function(){
+      });
+    };
     // Remove existing file
     $scope.remove = function (file) {
       if (file) {
