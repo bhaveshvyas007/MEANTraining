@@ -40,6 +40,11 @@ var FileSchema = new Schema({
     default: '',
     trim: true
   },
+  key: {
+    type: String,
+    default: '',
+    trim: true
+  },
   user: {
     type: Schema.ObjectId,
     ref: 'User'
