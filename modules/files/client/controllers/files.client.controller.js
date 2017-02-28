@@ -74,13 +74,29 @@ angular.module('files').controller('FilesController', ['$scope', '$stateParams',
         return false;
       }
 
-      var file = $scope.file;
+      var fd = new FormData();
+      fd.append('uploadFile',$scope.newFile);
+      fd.append('title', $scope.file.title);
+      fd.append('content', $scope.file.content);
 
-      file.$update(function () {
-        $location.path('files/' + file._id);
-      }, function (errorResponse) {
-        $scope.error = errorResponse.data.message;
+      var file = $scope.file.file;
+
+      $http.put('api/files/'+$stateParams.fileId, fd, {
+        transformRequest: angular.identity,
+        headers: {
+          'Content-Type': undefined
+        }
+      }).success(function(response){
+        $scope.success = true;
+
+        $location.path('files/' + response._id);
       });
+
+      // file.$update(function () {
+      //   $location.path('files/' + file._id);
+      // }, function (errorResponse) {
+      //   $scope.error = errorResponse.data.message;
+      // });
     };
 
     // Find a list of files
