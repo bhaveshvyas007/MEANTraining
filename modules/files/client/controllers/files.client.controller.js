@@ -102,8 +102,7 @@ angular.module('files').controller('FilesController', ['$scope', '$stateParams',
         fileId: $stateParams.fileId
       });
     };
-    $scope.showImage = function(){
-      console.log("Show Image");
+    $scope.showImage = function(){    
       $scope.files = Files.query();
     };
   }
