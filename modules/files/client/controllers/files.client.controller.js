@@ -37,10 +37,10 @@ angular.module('files').controller('FilesController', ['$scope', '$stateParams',
     };
 
     $scope.download = function () {
+      // window.location.href('api/get-file/'+$stateParams.fileId)
       $http.get('api/get-file/'+$stateParams.fileId)
 
       .success(function(response){
-        console.log(response);
       })
 
       .error(function(){
@@ -102,7 +102,7 @@ angular.module('files').controller('FilesController', ['$scope', '$stateParams',
       });
     };
     $scope.showImage = function(){
-      console.log("Show Image");
+      console.log('Show Image');
       $scope.files = Files.query();
     };
   }

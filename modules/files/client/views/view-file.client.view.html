@@ -1,4 +1,7 @@
 <section ng-controller="FilesController" ng-init="findOne()">
+  <link href="//vjs.zencdn.net/5.4.6/video-js.min.css" rel="stylesheet">
+  <script src="//vjs.zencdn.net/5.4.6/video.min.js"></script>
+  <div class=" row">
   <div class="page-header">
     <h1 ng-bind="file.title"></h1><i ng-if="file.filename">({{file.filename}})</i>
   </div>
@@ -19,8 +22,21 @@
     </em>
   </small>
   <p class="lead" ng-bind="file.content"></p>
-  <div class="">
-    <img width="100" src="{{file.filepath}}" alt="">
+  <div class="col-md-10">
+      <video class="col-md-10" width="320" height="240" controls ng-if="file.filetype.substr(0, file.filetype.indexOf('/')) === 'video'">
+        <source src = "api/get-file/58b6afd97128d7b2549ce895" type="video/mp4">
+      </video>
+      <!-- <video  class="video-js vjs-default-skin" ng-if="file.filetype.substr(0, file.filetype.indexOf('/')) === 'video'"
+  controls preload="auto" width="320" height="240"
+  poster="http://video-js.zencoder.com/oceans-clip.png"
+  data-setup='{"example_option":true}'>
+ <source src="api/get-file/58b6afd97128d7b2549ce895" type="video/mp4">
+ <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
+</video> -->
+    <img src="api/get-file/{{file._id}}" class="img-thumbnail" ng-if="file.filetype.substr(0, file.filetype.indexOf('/')) === 'image'">
+    <img src="modules/core/client/img/icon_doc.png" class="img-thumbnail" ng-if="file.filetype=='text/plain'">
+    <img src="modules/core/client/img/icon_pdf.png" class="img-thumbnail" ng-if="file.filetype=='application/pdf'">
   </div>
   <button type="button" name="button" ng-click="download()">Download</button>
+</div>
 </section>
